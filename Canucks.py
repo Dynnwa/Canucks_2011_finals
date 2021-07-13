@@ -7,10 +7,6 @@ import sys
 import pulp
 from pulp import *
 
-
-# In[69]:
-
-
 players = ['pae', 'pce', 'pds', 'phs', 'prk', 'pdh','pkb', 'pms', 'pss', 'dh', 'ds', 'ab'
            ,'ml', 'kb', 'rk', 'ar', 'ce', 'ae','kball', 'hs', 'ms', 'mr']
 
@@ -166,16 +162,10 @@ player_vars = LpVariable.dicts("Players", players, 0)
 
 # # Objective function
 
-# In[70]:
-
-
 prob += lpSum([goals[p]*player_vars[p] for p in players]), "Total points scored"   
 
 
 # # Constraints
-
-# In[71]:
-
 
 prob += lpSum([powerPlaypos[p]*player_vars[p] for p in players]) == 78, "powerPlaypos"
 #prob += lpSum([powerPlayneg[p]*player_vars[p] for p in players]) <= -91, "powerPlayneg"
@@ -189,10 +179,6 @@ prob += lpSum([abFatigue[p]*player_vars[p] for p in players]) <= 7*17, "ab"
 prob += lpSum([hsFatigue[p]*player_vars[p] for p in players]) <= 7*19, "hs"
 prob += lpSum([msFatigue[p]*player_vars[p] for p in players]) <= 7*16, "ms"
 prob += lpSum([mrFatigue[p]*player_vars[p] for p in players]) <= 7*15, "mr"
-
-
-# In[72]:
-
 
 ## new constraints
 prob += lpSum([dhFatigue[p]*player_vars[p] for p in players]) <= 7*22, "dh"
@@ -214,35 +200,20 @@ prob += lpSum([prkplay[p]*player_vars[p] for p in players]) >= 10, "prk"
 prob += lpSum([pssplay[p]*player_vars[p] for p in players]) >= 10, "pss"
 
 
-# In[73]:
-
-
 print(prob)
 
 
 # # Solve the LP.
 
-# In[74]:
-
-
 prob.solve()
 print("Status:", LpStatus[prob.status])
-
-
-# In[75]:
 
 
 for a in prob.variables():
     print(a.name, "=", a.varValue)
 
 
-# In[76]:
-
-
 print("Total Goals", value(prob.objective))
-
-
-# In[77]:
 
 
 #Slack and Dual
@@ -261,10 +232,5 @@ print("Shadow:", prob.constraints["blocks"].pi)
 print("hits")
 print("Slack:", prob.constraints["hits"].slack)
 print("Shadow:", prob.constraints["hits"].pi)
-
-
-# In[ ]:
-
-
 
 
